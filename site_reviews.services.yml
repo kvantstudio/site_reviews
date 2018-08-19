@@ -1,0 +1,5 @@
+services:
+  site_reviews.twig_extension:       
+    class: Drupal\site_reviews\TwigExtension\SiteReviewsTwigExtension
+    tags:
+      - { name: twig.extension }      

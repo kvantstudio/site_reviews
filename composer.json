@@ -1,0 +1,20 @@
+{
+    "name": "kvantstudio/site_reviews",
+    "description": "Module reviews for Drupal 8.",
+    "type": "drupal-custom-module",
+    "keywords": ["Drupal"],
+    "license": "GPL-2.0-only",
+    "authors": [{
+        "name": "Pavel Filinkov",
+        "email": "info@filinkov.ru",
+        "homepage": "https://filinkov.ru",
+        "role": "Main developer"
+    }],
+    "support": {
+        "email": "support@filinkov.ru"
+    },
+    "minimum-stability": "dev",
+    "require": {
+        "kvantstudio/kvantstudio": "^1.0.0"
+    }
+}

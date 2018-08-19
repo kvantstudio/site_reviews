@@ -1,0 +1,7 @@
+langcode: ru
+status: true
+dependencies: {  }
+id: review_created_date
+label: 'Дата создания отзыва'
+locked: false
+pattern: 'd F, Y'

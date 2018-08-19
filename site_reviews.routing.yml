@@ -1,0 +1,8 @@
+# Страница персонал.
+site_reviews.view:
+  path: '/reviews'
+  defaults:       
+    _controller: '\Drupal\site_reviews\Controller\SiteReviewsController::view'    
+    _title: 'Reviews'
+  requirements:
+    _permission: 'access content'

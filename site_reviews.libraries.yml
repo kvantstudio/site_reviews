@@ -1,0 +1,11 @@
+module:
+  css:
+    theme:      
+      css/site-reviews.css: {}
+  js:
+    js/site-reviews.js: {}      
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/drupal.ajax     
+    - core/drupalSettings      

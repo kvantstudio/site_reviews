@@ -1,0 +1,11 @@
+name: Reviews
+description: 'Module reviews for Drupal 8.'
+package: Kvantstudio
+type: module
+core: '8.x'
+version: '1.0.0-beta.1'
+dependencies:
+ - kvantstudio
+ - site_staff
+interface translation project: site_reviews
+interface translation server pattern: modules/custom/site_reviews/translations/%project.%language.po

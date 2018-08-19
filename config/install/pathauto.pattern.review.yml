@@ -1,0 +1,21 @@
+langcode: ru
+status: true
+dependencies:
+  module:
+    - node
+id: review
+label: Отзыв
+type: 'canonical_entities:node'
+pattern: 'reviews/[node:title]-[node:created:html_date]'
+selection_criteria:
+  0772398b-17a1-44b6-87f5-902e87b68b1d:
+    id: node_type
+    bundles:
+      review: review
+    negate: false
+    context_mapping:
+      node: node
+    uuid: 0772398b-17a1-44b6-87f5-902e87b68b1d
+selection_logic: and
+weight: -5
+relationships: {  }

@@ -1,0 +1,27 @@
+{% if count_nodes %}
+<div class="container">
+    <div class="row">
+        <div class="col-xs-12 col-sm-7 reviews">
+            {% for nid, data in nodes_reviews %}
+                <div class="review">
+                    <div class="review__name">{{ data.field_name }}</div>
+                    <div class="review__created">{{ data.node.getCreatedTime|format_date('review_created_date') }}</div>
+                    {% if data.field_social_network_account %}
+                        <div class="review__account">{{ data.field_social_network_account }}</div>
+                    {% endif %}
+                    <div class="review__body">{{ data.body }}</div>                    
+                </div>
+            {% endfor %}
+        </div>
+        <div class="col-xs-12 col-sm-5">
+            <div class="review-create-form">
+                <div class="review-create-form__title">{{ 'Give feedback'|t }}</div>
+                {{ getReviewForm(TRUE, TRUE, "Add a review") }}
+            </div>            
+        </div>
+    </div>
+</div>
+{% else %}
+<div class="review-create-form__title">{{ 'Be the first visitor who has left a review'|t }}</div>
+{{ getReviewForm(TRUE, TRUE, "Add a review") }}
+{% endif %}

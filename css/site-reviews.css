@@ -1,0 +1,66 @@
+.review-create-form__title {
+    font-weight: 700;
+    text-align: center;
+    max-width: 450px;
+}
+
+.site-review-form {
+    font-size: 14px;
+    max-width: 450px;
+    background: #f6f6f6;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    padding: 10px;
+}
+
+.site-review-form__submit:hover {
+    background: #cccccc;
+}
+
+.form-item-data-policy {
+    display: initial;
+}
+
+.site-review-form__data-policy-block {
+    font-size: 10px;
+}
+
+.site-review-form__data-policy {
+    width: inherit;
+}
+
+.review {
+    margin-bottom: 50px;
+}
+
+.review__name {
+    font-size: 1em;
+    font-weight: 700;
+}
+
+.review__body {
+    margin: 10px 0 0 20px;
+}
+
+.review__created {
+    margin: 10px 0;
+    color: #b3b3b3;
+    font-size: 0.8em;
+}
+
+.review-create-form {
+    transition: 0.7s;
+}
+
+.review-create-form_fixed {
+    position: fixed !important;
+    top: 10px;
+    background: #f6f6f6;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    z-index: 100;
+    box-shadow: 0 0 18px 0px #a7a7a7;
+    transition: 0.7s;
+}
