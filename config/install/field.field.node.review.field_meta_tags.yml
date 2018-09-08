@@ -1,0 +1,23 @@
+uuid: ae327cf7-844d-49f6-8055-4603fce65a37
+langcode: ru
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_meta_tags
+    - node.type.review
+  module:
+    - metatag
+id: node.review.field_meta_tags
+field_name: field_meta_tags
+entity_type: node
+bundle: review
+label: Мета-теги
+description: ''
+required: false
+translatable: true
+default_value:
+  -
+    value: 'a:0:{}'
+default_value_callback: ''
+settings: {  }
+field_type: metatag

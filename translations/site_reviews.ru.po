@@ -45,3 +45,9 @@ msgstr "Оставить отзыв"
 
 msgid "Read more"
 msgstr "Подробнее"
+
+msgid "The social network link is incorrect."
+msgstr "Ссылка на социальную сеть указана неверно."
+
+msgid "Your feedback has been sent successfully"
+msgstr "Ваш отзыв успешно отправлен"

@@ -5,7 +5,6 @@
  * Main file for the site_reviews.module.
  */
 
-use Drupal\Core\Database\Database;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Template\Attribute;
 use Drupal\node\Entity\Node;
@@ -15,51 +14,103 @@ use Drupal\site_reviews\Controller\reviewsController;
  * Implements hook_theme().
  */
 function site_reviews_theme($existing, $type, $theme, $path) {
-    return array(
-        'reviews' => array(
-            'variables' => array('nodes' => NULL),
-            'template' => 'reviews',
-        ),        
-        'node__reviews' => array(
-            'variables' => array(),
-            'template' => 'node--reviews',
-        ),       
-    );
+  return array(
+    'site_reviews_list' => array(
+      'variables' => array('nodes' => NULL),
+      'template' => 'site-reviews-list',
+    ),
+    'site_reviews_list_by_staffer' => array(
+      'variables' => array('node' => NULL, 'nodes' => NULL),
+      'template' => 'site-reviews-list-by-staffer',
+    ),
+    'node__reviews' => array(
+      'variables' => array(),
+      'template' => 'node--reviews',
+    ),
+    'site_reviews_feedback_sent_successfully' => array(
+      'variables' => array('name' => NULL),
+      'template' => 'site-reviews-feedback-sent-successfully',
+    ),
+  );
 }
 
 /**
- * Prepares variables for reviews.html.twig template.
+ * Implements hook_preprocess().
+ */
+function site_reviews_preprocess(&$variables, $hook) {
+  $module_handler = Drupal::service('module_handler');
+  $path = $module_handler->getModule('site_reviews')->getPath();
+  $variables['site_reviews_module_directory'] = $path;
+}
+
+/**
+ * Prepares variables for site-reviews-list.html.twig template.
  *
  * @param array $variables
  */
-function template_preprocess_reviews(&$variables) {
-    $nodes = $variables['nodes'];
+function template_preprocess_site_reviews_list(&$variables) {
+  $nodes = $variables['nodes'];
 
-    $viewmode = 'default';
-    $entityType = 'node';
-    $display = entity_get_display($entityType, 'review', $viewmode);
-    $viewBuilder = \Drupal::entityTypeManager()->getViewBuilder($entityType);
+  $viewmode = 'default';
+  $entityType = 'node';
+  $display = entity_get_display($entityType, 'review', $viewmode);
+  $viewBuilder = \Drupal::entityTypeManager()->getViewBuilder($entityType);
 
-    $variables['nodes_reviews'] = [];
+  $variables['nodes_reviews'] = [];
 
-    $fieldsToRender = array(
-        'field_name', 'field_social_network_account', 'body'
-    );    
-    
-    $variables['count_nodes'] = 0;
+  $fieldsToRender = array(
+    'field_name', 'field_staff', 'field_social_network_account', 'body',
+  );
 
-    foreach ($nodes as $node) {
-        $variables['nodes_reviews'][$node->id()]['node'] = $node;
-        foreach ($fieldsToRender as $field_name) {            
-            if (isset($node->{$field_name}) && $field = $node->{$field_name}) {
-                $fieldRenderable = $viewBuilder->viewField($field, $display->getComponent($field_name));
-                if (count($fieldRenderable) && !empty($fieldRenderable)) {
-                    $variables['nodes_reviews'][$node->id()][$field_name] = drupal_render($fieldRenderable);                    
-                }
-            }
+  $variables['count_nodes'] = 0;
+
+  foreach ($nodes as $node) {
+    $variables['nodes_reviews'][$node->id()]['node'] = $node;
+    foreach ($fieldsToRender as $field_name) {
+      if (isset($node->{$field_name}) && $field = $node->{$field_name}) {
+        $fieldRenderable = $viewBuilder->viewField($field, $display->getComponent($field_name));
+        if (count($fieldRenderable) && !empty($fieldRenderable)) {
+          $variables['nodes_reviews'][$node->id()][$field_name] = drupal_render($fieldRenderable);
         }
-        $variables['count_nodes'] = $variables['count_nodes'] + 1;        
-    }        
+      }
+    }
+    $variables['count_nodes'] = $variables['count_nodes'] + 1;
+  }
+}
+
+/**
+ * Prepares variables for site-reviews-list.html.twig template.
+ *
+ * @param array $variables
+ */
+function template_preprocess_site_reviews_list_by_staffer(&$variables) {
+  $nodes = $variables['nodes'];
+
+  $viewmode = 'default';
+  $entityType = 'node';
+  $display = entity_get_display($entityType, 'review', $viewmode);
+  $viewBuilder = \Drupal::entityTypeManager()->getViewBuilder($entityType);
+
+  $variables['nodes_reviews'] = [];
+
+  $fieldsToRender = array(
+    'field_name', 'field_social_network_account', 'body',
+  );
+
+  $variables['count_nodes'] = 0;
+
+  foreach ($nodes as $node) {
+    $variables['nodes_reviews'][$node->id()]['node'] = $node;
+    foreach ($fieldsToRender as $field_name) {
+      if (isset($node->{$field_name}) && $field = $node->{$field_name}) {
+        $fieldRenderable = $viewBuilder->viewField($field, $display->getComponent($field_name));
+        if (count($fieldRenderable) && !empty($fieldRenderable)) {
+          $variables['nodes_reviews'][$node->id()][$field_name] = drupal_render($fieldRenderable);
+        }
+      }
+    }
+    $variables['count_nodes'] = $variables['count_nodes'] + 1;
+  }
 }
 
 /**
@@ -68,55 +119,55 @@ function template_preprocess_reviews(&$variables) {
  * @param array $variables
  */
 function template_preprocess_node__reviews(&$variables) {
-    $variables['view_mode'] = $variables['elements']['#view_mode'];
+  $variables['view_mode'] = $variables['elements']['#view_mode'];
 
-    // Provide a distinct $teaser boolean.
-    $variables['teaser'] = $variables['view_mode'] == 'teaser';
-    $variables['node'] = $variables['elements']['#node'];
+  // Provide a distinct $teaser boolean.
+  $variables['teaser'] = $variables['view_mode'] == 'teaser';
+  $variables['node'] = $variables['elements']['#node'];
 
-    /** @var \Drupal\node\NodeInterface $node */
-    $node = $variables['node'];
+  /** @var \Drupal\node\NodeInterface $node */
+  $node = $variables['node'];
 
-    $variables['date'] = \Drupal::service('date.formatter')->format($node->getCreatedTime(), 'long');
-    unset($variables['elements']['created']);
+  $variables['date'] = \Drupal::service('date.formatter')->format($node->getCreatedTime(), 'long');
+  unset($variables['elements']['created']);
 
-    $variables['author_name'] = drupal_render($variables['elements']['uid']);
-    unset($variables['elements']['uid']);
+  $variables['author_name'] = drupal_render($variables['elements']['uid']);
+  unset($variables['elements']['uid']);
 
-    $variables['url'] = $node->url('canonical', array(
-        'language' => $node->language(),
-    ));
-    $variables['label'] = $variables['elements']['title'];
-    unset($variables['elements']['title']);
+  $variables['url'] = $node->url('canonical', array(
+    'language' => $node->language(),
+  ));
+  $variables['label'] = $variables['elements']['title'];
+  unset($variables['elements']['title']);
 
-    // The 'page' variable is set to TRUE in two occasions:
-    //   - The view mode is 'full' and we are on the 'node.view' route.
-    //   - The node is in preview and view mode is either 'full' or 'default'.
-    $variables['page'] = ($variables['view_mode'] == 'full' && (node_is_page($node)) || (isset($node->in_preview) && in_array($node->preview_view_mode, array('full', 'default'))));
+  // The 'page' variable is set to TRUE in two occasions:
+  //   - The view mode is 'full' and we are on the 'node.view' route.
+  //   - The node is in preview and view mode is either 'full' or 'default'.
+  $variables['page'] = ($variables['view_mode'] == 'full' && (node_is_page($node)) || (isset($node->in_preview) && in_array($node->preview_view_mode, array('full', 'default'))));
 
-    // Helpful $content variable for templates.
-    $variables += array('content' => array());
-    foreach (Element::children($variables['elements']) as $key) {
-        $variables['content'][$key] = $variables['elements'][$key];
+  // Helpful $content variable for templates.
+  $variables += array('content' => array());
+  foreach (Element::children($variables['elements']) as $key) {
+    $variables['content'][$key] = $variables['elements'][$key];
+  }
+
+  // Дополнительная информация.
+  $node_type = $node->type->entity;
+  $variables['author_attributes'] = new Attribute();
+  $variables['display_submitted'] = $node_type->displaySubmitted();
+  if ($variables['display_submitted']) {
+    if (theme_get_setting('features.node_user_picture')) {
+      $variables['author_picture'] = user_view($node->getOwner(), 'compact');
     }
+  }
 
-    // Дополнительная информация.
-    $node_type = $node->type->entity;
-    $variables['author_attributes'] = new Attribute();
-    $variables['display_submitted'] = $node_type->displaySubmitted();
-    if ($variables['display_submitted']) {
-        if (theme_get_setting('features.node_user_picture')) {
-            $variables['author_picture'] = user_view($node->getOwner(), 'compact');
-        }
-    }
+  // Добавляет роль СТАТЬЯ для региона.
+  $variables['attributes']['role'] = 'article';
 
-    // Добавляет роль СТАТЬЯ для региона.
-    $variables['attributes']['role'] = 'article';
-
-    // Подгружает похожих сотрудников.
-    $renderData = array(
-        '#theme' => 'node__reviews_links',
-        '#node' => $node,
-    );
-    $variables['node_reviews_links'] = \Drupal::service('renderer')->render($renderData, FALSE);
+  // Подгружает похожих сотрудников.
+  $renderData = array(
+    '#theme' => 'node__reviews_links',
+    '#node' => $node,
+  );
+  $variables['node_reviews_links'] = \Drupal::service('renderer')->render($renderData, FALSE);
 }

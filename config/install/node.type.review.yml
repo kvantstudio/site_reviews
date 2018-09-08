@@ -1,3 +1,4 @@
+uuid: 0cec46c3-cf6b-49d5-933a-8eea46cdb055
 langcode: ru
 status: true
 dependencies:
@@ -8,6 +9,8 @@ third_party_settings:
     available_menus:
       - main
     parent: 'main:'
+_core:
+  default_config_hash: jLMX7WYxI5VZWx5-5LLzs3HUQxa6wnnpgWumjTCsQWQ
 name: Отзыв
 type: review
 description: 'Отзыв, краткий обзор о работе компании.'

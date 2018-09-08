@@ -1,14 +1,17 @@
+uuid: 065d5800-21c4-4dd3-bc0a-7afaf046644d
 langcode: ru
 status: true
 dependencies:
   config:
     - field.storage.node.field_name
     - node.type.review
+_core:
+  default_config_hash: 2wD0wldIJAsH-4H9cg9C0cvZcNlf0zQaOjYIpFBkjFw
 id: node.review.field_name
 field_name: field_name
 entity_type: node
 bundle: review
-label: Имя
+label: 'Имя посетителя'
 description: ''
 required: true
 translatable: false

@@ -1,8 +1,17 @@
-# Страница персонал.
-site_reviews.view:
+# Страница с перенем отзывов.
+site_reviews.list:
   path: '/reviews'
-  defaults:       
-    _controller: '\Drupal\site_reviews\Controller\SiteReviewsController::view'    
+  defaults:
+    _controller: '\Drupal\site_reviews\Controller\SiteReviewsController::siteReviewsList'
     _title: 'Reviews'
+  requirements:
+    _permission: 'access content'
+
+# Страница с уведомлением об успешной отправке отзыва.
+site_reviews.feedback_sent_successfully:
+  path: 'site-reviews-successfully-issued/{name}'
+  defaults:
+    _title: 'Your feedback has been sent successfully'
+    _controller: '\Drupal\site_reviews\Controller\SiteReviewsController::siteReviewsFeedbackSentSuccessfully'
   requirements:
     _permission: 'access content'

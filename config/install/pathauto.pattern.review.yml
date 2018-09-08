@@ -1,8 +1,11 @@
+uuid: 570f07df-8913-48c1-99da-5dc11d9fecb6
 langcode: ru
 status: true
 dependencies:
   module:
     - node
+_core:
+  default_config_hash: Cv1cdf4dH9OWsG12nMVvy-siyZCK9vUc5d6-fVykIPA
 id: review
 label: Отзыв
 type: 'canonical_entities:node'

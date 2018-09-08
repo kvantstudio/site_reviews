@@ -1,3 +1,4 @@
+uuid: 173be340-502d-4e59-b46a-d7b9a8e385ea
 langcode: ru
 status: true
 dependencies:
@@ -5,16 +6,19 @@ dependencies:
     - field.field.node.review.body
     - field.field.node.review.field_image
     - field.field.node.review.field_image_staff
+    - field.field.node.review.field_meta_tags
     - field.field.node.review.field_name
     - field.field.node.review.field_social_network_account
+    - field.field.node.review.field_staff
     - node.type.review
   module:
     - image
     - link
+    - metatag
     - text
     - user
 _core:
-  default_config_hash: sGlR3QpSdGdoUIXQc0sUytcSnkYk_j1wkEjjhyFm9Ao
+  default_config_hash: keQRoQxVGq2GgZu7Te0U20UiFmCkiy56vvJ84zlduP8
 id: node.review.default
 targetEntityType: node
 bundle: review
@@ -37,7 +41,7 @@ content:
     type: image
     region: content
   field_image_staff:
-    weight: 0
+    weight: 1
     label: hidden
     settings:
       image_style: ''
@@ -45,8 +49,15 @@ content:
     third_party_settings: {  }
     type: image
     region: content
+  field_meta_tags:
+    weight: 5
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    type: metatag_empty_formatter
+    region: content
   field_name:
-    weight: 1
+    weight: 0
     label: hidden
     settings:
       link_to_entity: false
@@ -64,6 +75,14 @@ content:
       target: ''
     third_party_settings: {  }
     type: link
+    region: content
+  field_staff:
+    weight: 6
+    label: hidden
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
     region: content
 hidden:
   langcode: true

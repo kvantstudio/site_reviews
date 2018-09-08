@@ -1,3 +1,4 @@
+uuid: 1581b7bd-f4dd-4550-80b0-376f2f6459c9
 langcode: ru
 status: true
 dependencies:
@@ -6,6 +7,8 @@ dependencies:
     - node.type.review
   module:
     - image
+_core:
+  default_config_hash: oIJHss6UUS4pmC5Vft5-XCaYm2Xl_4iGGzlLltgngU0
 id: node.review.field_image
 field_name: field_image
 entity_type: node

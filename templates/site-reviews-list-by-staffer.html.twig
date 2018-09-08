@@ -1,0 +1,15 @@
+{% if count_nodes %}
+    <h2>Отзывы о сотруднике {{ node.getTitle }}</h2>
+    <div class="reviews">
+        {% for nid, data in nodes_reviews %}
+            <div class="review">
+                <div class="review__name">{{ data.field_name }}</div>
+                <div class="review__created">{{ data.node.getCreatedTime|format_date('review_created_date') }}</div>
+                {% if data.field_social_network_account %}
+                    <div class="review__account">{{ data.field_social_network_account }}</div>
+                {% endif %}
+                <div class="review__body">{{ data.body }}</div>
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}

@@ -6,13 +6,13 @@
 
     'use strict';
 
-    if ($('.review-create-form').length) {
-        var topPos = $('.review-create-form').first().offset().top;
+    if ($('.reviews__form-wrapper').length) {
+        var topPos = $('.reviews__form-wrapper').first().offset().top;
         $(window).scroll(function() {
-            if (screen.width > 767) {
+            if (screen.width > 1199) {
                 var top = $(document).scrollTop() - 100;
-                if (top > topPos) $('.review-create-form').addClass('review-create-form_fixed');
-                else $('.review-create-form').removeClass('review-create-form_fixed');
+                if (top > topPos) $('.reviews__form-wrapper').addClass('reviews__form-wrapper_fixed');
+                else $('.reviews__form-wrapper').removeClass('reviews__form-wrapper_fixed');
             }
         });
     }

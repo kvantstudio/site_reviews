@@ -1,6 +1,9 @@
+uuid: 2562bf8a-acce-4048-b657-4ddac7334dee
 langcode: ru
 status: true
 dependencies: {  }
+_core:
+  default_config_hash: Epnr8Ap2ZcjufDTnIY-3fPBDHCYkjJNLpQW_6hzrE0M
 id: review_created_date
 label: 'Дата создания отзыва'
 locked: false

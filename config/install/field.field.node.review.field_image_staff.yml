@@ -1,3 +1,4 @@
+uuid: 2c4361ec-0394-4a96-9169-ee49808c73d0
 langcode: ru
 status: true
 dependencies:
@@ -5,13 +6,34 @@ dependencies:
     - field.storage.node.field_image_staff
     - node.type.review
   module:
+    - filefield_paths
     - image
+third_party_settings:
+  filefield_paths:
+    enabled: true
+    file_path:
+      value: images/reviews/users
+      options:
+        slashes: false
+        pathauto: false
+        transliterate: false
+    redirect: false
+    retroactive_update: false
+    active_updating: false
+    file_name:
+      value: '[file:ffp-name-only-original].[file:ffp-extension-original]'
+      options:
+        slashes: false
+        pathauto: false
+        transliterate: false
+_core:
+  default_config_hash: pavgcgRcEE832RX-b9y4O2kA-s4a4BjhOiAQsnRYTAA
 id: node.review.field_image_staff
 field_name: field_image_staff
 entity_type: node
 bundle: review
-label: 'Изображение пользователя'
-description: 'Изображение пользователя, который оставляет отзыв.'
+label: 'Изображение посетителя'
+description: 'Изображение посетителя, который оставляет отзыв.'
 required: false
 translatable: true
 default_value: {  }
@@ -20,8 +42,8 @@ settings:
   file_directory: images/reviews/users
   file_extensions: 'png gif jpg jpeg'
   max_filesize: '5 MB'
-  max_resolution: 800x600
-  min_resolution: 350x300
+  max_resolution: 1920x1080
+  min_resolution: 300x300
   alt_field: true
   alt_field_required: true
   title_field: false

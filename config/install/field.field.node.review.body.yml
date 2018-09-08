@@ -1,3 +1,4 @@
+uuid: 84eadb15-1523-4444-b1a5-f7fd8995d8b7
 langcode: ru
 status: true
 dependencies:
@@ -6,6 +7,8 @@ dependencies:
     - node.type.review
   module:
     - text
+_core:
+  default_config_hash: FkvzAoNBJw5q1OqlFaSi_OlQIA6HyzE-S09kksji3m8
 id: node.review.body
 field_name: body
 entity_type: node
