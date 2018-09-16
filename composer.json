@@ -15,6 +15,7 @@
     },
     "minimum-stability": "dev",
     "require": {
-        "kvantstudio/kvantstudio": "^1.0.0"
+        "kvantstudio/kvantstudio": "^1.0.0",
+        "kvantstudio/site_send_message": "^1.0.0"
     }
 }

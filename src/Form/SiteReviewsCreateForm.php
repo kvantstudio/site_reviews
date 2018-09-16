@@ -12,6 +12,7 @@ use Drupal\Core\Ajax\RedirectCommand;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use \Drupal\node\Entity\Node;
+use Drupal\Core\Database\Database;
 
 /**
  * Send reviews create form.
@@ -27,26 +28,44 @@ class SiteReviewsCreateForm extends FormBase {
   /**
    * {@inheritdoc}.
    */
-  public function buildForm(array $form, FormStateInterface $form_state, $name = TRUE, $link = TRUE, $submit_label = 'Send') {
+  public function buildForm(array $form, FormStateInterface $form_state, $submit_label = 'Send') {
     $config = $this->config('kvantstudio.settings');
 
+    // Интерфейс отображения формы.
+    $entity_type = 'node';
+    $bundle = 'review';
+    $form_mode = 'default';
+    $entity_form_display = \Drupal::entityTypeManager()->getStorage('entity_form_display')->load($entity_type . '.' . $bundle . '.' . $form_mode);
+
+    $field_definitions = \Drupal::service('entity_field.manager')->getFieldDefinitions($entity_type, $bundle);
+
     // Поле имя.
+    $label = 'Your name';
+    if (isset($field_definitions['field_name'])) {
+      $instance = $field_definitions['field_name'];
+      $label = (string) $instance->getLabel();
+    }
     $form['name'] = array(
       '#type' => 'textfield',
-      '#title' => $this->t('Your name'),
+      '#title' => $this->t($label),
       '#required' => TRUE,
       '#attributes' => array('class' => array('site-reviews-create-form__name'), 'placeholder' => ''),
-      '#access' => $name ? TRUE : FALSE,
+      '#access' => $entity_form_display->getComponent('field_name') ? TRUE : FALSE,
       '#suffix' => '<div class="site-reviews-create-form__validation-message site-reviews-create-form__validation-message-name"></div>',
     );
 
     // Поле ссылка на социальную сеть.
+    $label = 'Link your account on a social network';
+    if (isset($field_definitions['field_social_network_account'])) {
+      $instance = $field_definitions['field_social_network_account'];
+      $label = (string) $instance->getLabel();
+    }
     $form['link'] = array(
       '#type' => 'textfield',
-      '#title' => $this->t('Link your account on a social network'),
+      '#title' => $this->t($label),
       '#required' => FALSE,
       '#attributes' => array('class' => array('site-reviews-create-form__link'), 'placeholder' => ''),
-      '#access' => $link ? TRUE : FALSE,
+      '#access' => $entity_form_display->getComponent('field_social_network_account') ? TRUE : FALSE,
       '#ajax' => [
         'callback' => '::validateLink',
         'event' => 'change',
@@ -58,24 +77,35 @@ class SiteReviewsCreateForm extends FormBase {
     );
 
     // Поле ссылка на сотрудника.
+    $label = 'Select staffer';
+    if (isset($field_definitions['field_staff'])) {
+      $instance = $field_definitions['field_staff'];
+      $label = (string) $instance->getLabel();
+    }
     $staff = [0 => $this->t('General feedback on our work')];
     $staff += getStaffMembers();
     $form['staffer'] = [
       '#type' => 'select',
-      '#title' => $this->t('Select staffer'),
+      '#title' => $this->t($label),
       '#options' => $staff,
-      '#access' => count($staff) > 1 ? TRUE : FALSE,
+      '#access' => count($staff) > 1 && $entity_form_display->getComponent('field_staff') ? TRUE : FALSE,
     ];
 
     // Поле текст сообщения.
+    $label = 'Your review';
+    if (isset($field_definitions['body'])) {
+      $instance = $field_definitions['body'];
+      $label = (string) $instance->getLabel();
+    }
     $form['text'] = array(
       '#type' => 'textarea',
-      '#title' => $this->t('Your review'),
+      '#title' => $this->t($label),
       '#description' => '',
-      '#required' => TRUE,
+      '#required' => TRUE, // TODO: Доработать. Нужно брать из настроек поля.
       '#attributes' => array('class' => array('site-reviews-create-form__text'), 'placeholder' => ''),
       '#rows' => 6,
       '#suffix' => '<div class="site-reviews-create-form__validation-message site-reviews-create-form__validation-message-text"></div>',
+      '#access' => $entity_form_display->getComponent('body') ? TRUE : FALSE,
     );
 
     // Соглашение об обработке персональных данных.
@@ -97,7 +127,6 @@ class SiteReviewsCreateForm extends FormBase {
       $data_policy_information = str_replace("@submit_label", $this->t($submit_label), $data_policy_information);
       $nid = $config->get('node_agreement_personal_data');
       $data_policy_information = str_replace("@data_policy_url", "/node/" . $nid, $data_policy_information);
-
       $form['data_policy_information'] = array(
         '#markup' => $data_policy_information,
         '#suffix' => '</div>',
@@ -185,6 +214,7 @@ class SiteReviewsCreateForm extends FormBase {
     $response = new AjaxResponse();
 
     $account = \Drupal::currentUser();
+    $connection = \Drupal::database();
 
     // Выполняет стандартную валидацию полей формы и добавляет примечания об ошибках.
     FormBase::validateForm($form, $form_state);
@@ -237,6 +267,28 @@ class SiteReviewsCreateForm extends FormBase {
         ],
       ]);
       $node->save();
+
+      // Массив данных для отправки уведомления на почту.
+      $fields = [
+        'uid' => $account->id(),
+        'form_name' => $this->getFormId(),
+        'name' => $name,
+        'phone' => '',
+        'mail' => '',
+        'text' => $text,
+        'status' => 0,
+        'created' => REQUEST_TIME,
+      ];
+
+      // Регистрация сообщения в БД.
+      $fields['mid'] = $connection->insert('site_send_message', ['return' => Database::RETURN_INSERT_ID])
+        ->fields($fields)
+        ->execute();
+
+      // Проверяем нужно ли отправить сообщение мгновенно.
+      if (is_numeric($fields['mid'])) {
+        site_send_message_to_email($fields);
+      }
 
       // Редирект на страницу уведомления об отправке отзыва.
       $route_name = 'site_reviews.feedback_sent_successfully';

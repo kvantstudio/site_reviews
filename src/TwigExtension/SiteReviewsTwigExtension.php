@@ -34,8 +34,8 @@ class SiteReviewsTwigExtension extends \Twig_Extension {
   /**
    * Формирует форму отправки отзыва.
    */
-  public static function getReviewForm($name = TRUE, $link = TRUE, $submit_label = 'Send') {
-    $form = \Drupal::formBuilder()->getForm('Drupal\site_reviews\Form\SiteReviewsCreateForm', $name, $link, $submit_label);
+  public static function getReviewForm($submit_label = 'Send') {
+    $form = \Drupal::formBuilder()->getForm('Drupal\site_reviews\Form\SiteReviewsCreateForm', $submit_label);
     return \Drupal::service('renderer')->render($form, FALSE);
   }
 

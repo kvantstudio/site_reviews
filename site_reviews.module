@@ -55,6 +55,7 @@ function template_preprocess_site_reviews_list(&$variables) {
   $entityType = 'node';
   $display = entity_get_display($entityType, 'review', $viewmode);
   $viewBuilder = \Drupal::entityTypeManager()->getViewBuilder($entityType);
+  $renderer = \Drupal::service('renderer');
 
   $variables['nodes_reviews'] = [];
 
@@ -68,9 +69,11 @@ function template_preprocess_site_reviews_list(&$variables) {
     $variables['nodes_reviews'][$node->id()]['node'] = $node;
     foreach ($fieldsToRender as $field_name) {
       if (isset($node->{$field_name}) && $field = $node->{$field_name}) {
-        $fieldRenderable = $viewBuilder->viewField($field, $display->getComponent($field_name));
-        if (count($fieldRenderable) && !empty($fieldRenderable)) {
-          $variables['nodes_reviews'][$node->id()][$field_name] = drupal_render($fieldRenderable);
+        $variables['nodes_reviews'][$node->id()][$field_name] = NULL;
+        $display_options = $display->getComponent($field_name);
+        if ($display_options) {
+          $fieldRenderable = $viewBuilder->viewField($field, $display_options);
+          $variables['nodes_reviews'][$node->id()][$field_name] = $renderer->render($fieldRenderable);
         }
       }
     }
